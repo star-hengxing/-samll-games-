@@ -1,5 +1,5 @@
-// author:ºãĞÇ
-//version:1.2
+// author:æ’æ˜Ÿ
+//version:1.3
 
 
 #include <stdio.h>
@@ -10,14 +10,14 @@
 #include<setjmp.h>
 #pragma warning(disable:4996)
 
-//»áÓÃ¾ÍĞĞµÄº¯Êı
+//ä¼šç”¨å°±è¡Œçš„å‡½æ•°
 
-void setxy(int x, int y)  //ÉèÖÃÊäÈë£¬Êä³öµÄÎ»ÖÃ£¬Ò²¾ÍÊÇµ±Ç°¹â±êÎ»ÖÃ
+void setxy(int x, int y)  //è®¾ç½®è¾“å…¥ï¼Œè¾“å‡ºçš„ä½ç½®ï¼Œä¹Ÿå°±æ˜¯å½“å‰å…‰æ ‡ä½ç½®
 {
 	COORD coord = { x, y };
 	SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE), coord);
 }
-void getxy(int* x, int* y) //»ñÈ¡µ±Ç°¹â±êÎ»ÖÃ,µ÷ÓÃ£ºgetxy(&x,&y);
+void getxy(int* x, int* y) //è·å–å½“å‰å…‰æ ‡ä½ç½®,è°ƒç”¨ï¼šgetxy(&x,&y);
 {
 	HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
 	COORD coordScreen = { 0, 0 };
@@ -28,29 +28,29 @@ void getxy(int* x, int* y) //»ñÈ¡µ±Ç°¹â±êÎ»ÖÃ,µ÷ÓÃ£ºgetxy(&x,&y);
 		*y = csbi.dwCursorPosition.Y;
 	}
 }
-void gotoxy(int x, int y) //½«¹â±êµ÷Õûµ½(x,y)µÄÎ»ÖÃ
+void gotoxy(int x, int y) //å°†å…‰æ ‡è°ƒæ•´åˆ°(x,y)çš„ä½ç½®
 {
 	HANDLE handle = GetStdHandle(STD_OUTPUT_HANDLE);
 	COORD pos;
 	pos.X = x;
 	pos.Y = y;	SetConsoleCursorPosition(handle, pos);
 }
-void HideCursor()	  //Òş²Ø¹â±ê
+void HideCursor()	  //éšè—å…‰æ ‡
 {
 	CONSOLE_CURSOR_INFO cursor_info = { 1, 0 };
 	SetConsoleCursorInfo(GetStdHandle(STD_OUTPUT_HANDLE), &cursor_info);
 }
 
-int bird_x, bird_y;//Äñ×ø±ê
-int high, width;//ÓÎÏ·½çÃæ³¤Óë¿í
-int score;//·ÖÊı
-int wall_xTop, wall_xDown;//ÉÏÃæµÄÇ½ºÍÏÂÃæµÄÇ½
-int wall_x;//Ç½×ø±ê
-bool result = 0;//ÓÎÏ·ÊäÓ®ÅĞ¶¨
+int bird_x, bird_y;//é¸Ÿåæ ‡
+int high, width;//æ¸¸æˆç•Œé¢é•¿ä¸å®½
+int score;//åˆ†æ•°
+int wall_xTop, wall_xDown;//ä¸Šé¢çš„å¢™å’Œä¸‹é¢çš„å¢™
+int wall_x;//å¢™åæ ‡
+bool result = 0;//æ¸¸æˆè¾“èµ¢åˆ¤å®š
 int option;
-jmp_buf restart;//Ìø×ªµã
+jmp_buf restart;//è·³è½¬ç‚¹
 
-void startUp()//³õÊ¼»¯±äÁ¿
+void startUp()//åˆå§‹åŒ–å˜é‡
 {
 	system("color 8F");
 	high = 20;
@@ -59,16 +59,16 @@ void startUp()//³õÊ¼»¯±äÁ¿
 	bird_x = high / 2;
 	bird_y = width / 4;
 	wall_x = width - 1;
-	wall_xTop = high / 4;//´Ë´¦¿É¼ÓÄÑ¶È
+	wall_xTop = high / 4;//æ­¤å¤„å¯åŠ éš¾åº¦
 	wall_xDown = high / 2;
 }
-void primaryMenu()//Ö÷²Ëµ¥
+void primaryMenu()//ä¸»èœå•
 {
 	char con1;
 	setxy(53, 5);
 	printf("FlappyBird");
 	setxy(50, 15);
-	printf("°´¿Õ¸ñ¼ü¿ªÊ¼ÓÎÏ·");
+	printf("æŒ‰ç©ºæ ¼é”®å¼€å§‹æ¸¸æˆ");
 	con1 = _getch();
 	if (con1 == ' ')
 	{
@@ -76,7 +76,7 @@ void primaryMenu()//Ö÷²Ëµ¥
 		system("cls");
 	}
 }
-void upDateWithUser()//Íæ¼Ò²Ù×÷¿ØÖÆ
+void upDateWithUser()//ç©å®¶æ“ä½œæ§åˆ¶
 {
 	char con2;
 	if (_kbhit())
@@ -88,7 +88,7 @@ void upDateWithUser()//Íæ¼Ò²Ù×÷¿ØÖÆ
 		}
 	}
 }
-void show()//»­ÃæÏÔÊ¾
+void show()//ç”»é¢æ˜¾ç¤º
 {
 	int i, j;
 	gotoxy(0, 0);
@@ -98,7 +98,7 @@ void show()//»­ÃæÏÔÊ¾
 		{
 			if ((i == bird_x) && (j == bird_y))
 			{
-				printf("Äñ");
+				printf("é¸Ÿ");
 			}
 			else if (i == high)
 			{
@@ -115,9 +115,9 @@ void show()//»­ÃæÏÔÊ¾
 		}
 		printf("\n");
 	}
-	printf("\t\t\t\t\t\t\t\tµÃ·Ö:%d\n²Ù×÷ËµÃ÷£º°´¿Õ¸ñ¼üĞ¡Äñ»áÍùÉÏ·É\n", score);
+	printf("\t\t\t\t\t\t\t\tå¾—åˆ†:%d\næ“ä½œè¯´æ˜ï¼šæŒ‰ç©ºæ ¼é”®å°é¸Ÿä¼šå¾€ä¸Šé£\n", score);
 }
-void upDateWithoutUser()//ÓÎÏ·ÔËĞĞºÍÅĞ¶¨
+void upDateWithoutUser()//æ¸¸æˆè¿è¡Œå’Œåˆ¤å®š
 {
 	if (wall_x > 0)
 	{
@@ -143,14 +143,14 @@ void upDateWithoutUser()//ÓÎÏ·ÔËĞĞºÍÅĞ¶¨
 		else if ((bird_x <= wall_xTop) || (bird_x >= wall_xDown))
 		{
 			system("cls");
-			printf("ÓÎÏ·Ê§°Ü!\n\nÄãµÄµÃ·ÖÊÇ:%d\n\n", score);
+			printf("æ¸¸æˆå¤±è´¥!\n\nä½ çš„å¾—åˆ†æ˜¯:%d\n\n", score);
 			result = 1;
 		}
 	}
 	if ((bird_x >= high) || (bird_x < 0))
 	{
 		system("cls");
-		printf("ÓÎÏ·Ê§°Ü!\n\nÄãµÄµÃ·ÖÊÇ:%d\n\n", score);
+		printf("æ¸¸æˆå¤±è´¥!\n\nä½ çš„å¾—åˆ†æ˜¯:%d\n\n", score);
 		result = 1;
 	}
 	Sleep(100);
@@ -169,8 +169,8 @@ int main()
 		upDateWithUser();
 		if (result == 1)
 		{
-			printf("1.ÖØĞÂ¿ªÊ¼ÓÎÏ·\n2.ÍË³öÓÎÏ·\n");
-			printf("ÇëÊäÈë:");
+			printf("1.é‡æ–°å¼€å§‹æ¸¸æˆ\n2.é€€å‡ºæ¸¸æˆ\n");
+			printf("è¯·è¾“å…¥:");
 			scanf("%d", &option);
 			if (option == 1)
 			{
