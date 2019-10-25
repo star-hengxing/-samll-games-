@@ -1,0 +1,190 @@
+// author:恒星
+//version:1.3
+
+
+#include <stdio.h>
+#include <windows.h>
+#include <stdlib.h>
+#include <conio.h>
+#include <time.h>
+#include<setjmp.h>
+#include<stdbool.h>
+#pragma warning(disable:4996)
+
+//会用就行的函数
+
+void setxy(int x, int y)  //设置输入，输出的位置，也就是当前光标位置
+{
+	COORD coord = { x, y };
+	SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE), coord);
+}
+void getxy(int* x, int* y) //获取当前光标位置,调用：getxy(&x,&y);
+{
+	HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
+	COORD coordScreen = { 0, 0 };
+	CONSOLE_SCREEN_BUFFER_INFO csbi;
+	if (GetConsoleScreenBufferInfo(hConsole, &csbi))
+	{
+		*x = csbi.dwCursorPosition.X;
+		*y = csbi.dwCursorPosition.Y;
+	}
+}
+void gotoxy(int x, int y) //将光标调整到(x,y)的位置
+{
+	HANDLE handle = GetStdHandle(STD_OUTPUT_HANDLE);
+	COORD pos;
+	pos.X = x;
+	pos.Y = y;	SetConsoleCursorPosition(handle, pos);
+}
+void HideCursor()	  //隐藏光标
+{
+	CONSOLE_CURSOR_INFO cursor_info = { 1, 0 };
+	SetConsoleCursorInfo(GetStdHandle(STD_OUTPUT_HANDLE), &cursor_info);
+}
+
+int bird_x, bird_y;//鸟坐标
+int high, width;//游戏界面长与宽
+int score;//分数
+int wall_xTop, wall_xDown;//上面的墙和下面的墙
+int wall_x;//墙坐标
+bool result = 0;//游戏输赢判定
+int option;
+jmp_buf restart;//跳转点
+
+void startUp()//初始化变量
+{
+	system("color 8F");
+	high = 20;
+	width = 50;
+	score = 0;
+	bird_x = high / 2;
+	bird_y = width / 4;
+	wall_x = width - 1;
+	wall_xTop = high / 4;//此处可加难度
+	wall_xDown = high / 2;
+}
+void primaryMenu()//主菜单
+{
+	char con1;
+	setxy(53, 5);
+	printf("FlappyBird");
+	setxy(50, 15);
+	printf("按空格键开始游戏");
+	con1 = _getch();
+	if (con1 == ' ')
+	{
+		printf("\a");
+		system("cls");
+	}
+}
+void upDateWithUser()//玩家操作控制
+{
+	char con2;
+	if (_kbhit())
+	{
+		con2 = _getch();
+		if ((con2 == ' ') && (bird_x >= 0))
+		{
+			bird_x -= 2;
+		}
+	}
+}
+void show()//画面显示
+{
+	int i, j;
+	gotoxy(0, 0);
+	for (i = 0; i <= high; i++)
+	{
+		for (j = 0; j <= width; j++)
+		{
+			if ((i == bird_x) && (j == bird_y))
+			{
+				printf("鸟");
+			}
+			else if (i == high)
+			{
+				printf("_");
+			}
+			else if ((j == wall_x) && ((i <= wall_xTop) || (i >= wall_xDown)))
+			{
+				printf("|");
+			}
+			else
+			{
+				printf(" ");
+			}
+		}
+		printf("\n");
+	}
+	printf("\t\t\t\t\t\t\t\t得分:%d\n操作说明：按空格键小鸟会往上飞\n", score);
+}
+void upDateWithoutUser()//游戏运行和判定
+{
+	if (wall_x > 0)
+	{
+		wall_x--;
+	}
+	else
+	{
+		wall_x = width - 1;
+		srand((int)time(NULL));
+		wall_xTop = rand() % (high/2 );
+		wall_xDown = wall_xTop+5;
+	}
+	if ((bird_x > 0) && (bird_x < high))
+	{
+		bird_x++;
+	}
+	if (bird_y == wall_x - 1)
+	{
+		if ((bird_x > wall_xTop) && (bird_x < wall_xDown))
+		{
+			score++;
+		}
+		else if ((bird_x <= wall_xTop) || (bird_x >= wall_xDown))
+		{
+			system("cls");
+			printf("游戏失败!\n\n你的得分是:%d\n\n", score);
+			result = 1;
+		}
+	}
+	if ((bird_x >= high) || (bird_x < 0))
+	{
+		system("cls");
+		printf("游戏失败!\n\n你的得分是:%d\n\n", score);
+		result = 1;
+	}
+	Sleep(100);
+}
+int main()
+{
+	primaryMenu();
+	setjmp(restart);
+	HideCursor();
+	startUp();
+	while (1)
+	{
+
+		show();
+		upDateWithoutUser();
+		upDateWithUser();
+		if (result == 1)
+		{
+			printf("1.重新开始游戏\n2.退出游戏\n");
+			printf("请输入:");
+			scanf("%d", &option);
+			if (option == 1)
+			{
+				system("cls");
+				result = 0;
+				longjmp(restart, 0);
+			}
+			else if (option == 2)
+			{
+				break;
+			}
+		}
+
+	}
+	return 0;
+}
