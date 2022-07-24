@@ -72,51 +72,44 @@ void show(student* p)//显示所有数据
 void change(student* p, int n)//修改第n个结点
 {
 	int i = 0;
-	while (i < n && p != NULL)
+	for (int i=0; i<n&&p; i++)
 	{
 		p = p->next;
-		i++;
 	}
-	if (p != NULL)
+	
+	if (p == NULL) {
+		puts("该学生信息不存在\n");
+	}
+	
+	printf("\t\t\n\n		  你想修改哪个数值:		 ");
+	printf("\n\n\t\t	      1.姓名       			");
+	printf("\n\n\t\t	      2.学号      			");
+	printf("\n\n\t\t	      3.电话号码      		 ");
+	printf("\n\n\t\t	      0.退出修改界面      		 \n");
+	
+	char input = getch();
+	while (1)
 	{
-		printf("\t\t\n\n		  你想修改哪个数值:		 ");
-		printf("\n\n\t\t	      1.姓名       			");
-		printf("\n\n\t\t	      2.学号      			");
-		printf("\n\n\t\t	      3.电话号码      		 ");
-		printf("\n\n\t\t	      0.退出修改界面      		 \n");
-		char input = getch();
-		while (1)
-		{
-			if (input == '1')
-			{
+		switch (input) {
+			case '1':
 				printf("请输入新的名字:");
 				scanf("%s", &p->name);
 				puts("数据修改完毕\n");
-				Sleep(1000);
-			}
-			else if (input == '2')
-			{
+				break;
+			case '2':
 				printf("请输入新的学号:");
 				scanf("%d", &p->number);
 				puts("数据修改完毕\n");
-				Sleep(1000);
-			}
-			else if (input == '3')
-			{
+				break;
+			case '3':
 				printf("请输入新的电话号码:");
 				scanf("%d", &p->tel);
 				puts("数据修改完毕\n");
-				Sleep(1000);
-			}
-			else if (input == '0')
-			{
 				break;
-			}
+			default:
+				return;
 		}
-	}
-	else
-	{
-		puts("该学生信息不存在\n");
+		Sleep(1000);
 	}
 
 }
