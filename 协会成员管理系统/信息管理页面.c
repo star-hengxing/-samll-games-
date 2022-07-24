@@ -87,10 +87,10 @@ void change(student* p, int n)//修改第n个结点
 	printf("\n\n\t\t	      3.电话号码      		 ");
 	printf("\n\n\t\t	      0.退出修改界面      		 \n");
 	
-	char input = getch();
+	char input;
 	while (1)
 	{
-		switch (input) {
+		switch (getch()) {
 			case '1':
 				printf("请输入新的名字:");
 				scanf("%s", &p->name);
