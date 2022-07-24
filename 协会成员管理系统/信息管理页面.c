@@ -159,17 +159,11 @@ void add(student *p, int m, int n) //添加多少个结点,并且放在哪里
 
 void deletelist(student *p) //清空链表
 {
-	student *temp1, *temp2;
-	temp1 = p->next;
-	if (p != NULL)
-		while (temp1->next != NULL)
-		{
-			temp2 = temp1->next;
-			free(temp1);
-			temp1 = temp2;
-		}
-	p->next = NULL;
-	p = NULL;
+	while(p) {
+		student *next = next_node(p);
+		free(p);
+		p = next;
+	}
 	puts("删除数据成功!\n");
 	Sleep(1000);
 }
