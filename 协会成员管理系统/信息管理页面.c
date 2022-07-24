@@ -1,10 +1,13 @@
-#include <stdio.h>
-#include <string.h>
 #include <stdlib.h>
 #include <Windows.h>
+
 #include <stdio.h>
 #include <conio.h>
+
+#include <errno.h>
+#include <string.h>
 #include <time.h>
+
 #pragma warning(disable : 4996)
 
 typedef struct Student
@@ -190,22 +193,24 @@ void SaveData(student *p)
 	student *temp;
 	FILE *fp = NULL;
 	fp = fopen("C:/Users/Administrator/Desktop/users.txt", "a");
-	if (p != NULL)
-	{
-		while (p->next != NULL)
-		{
-			p = p->next;
-			fprintf(fp, "姓名:%s\n", temp->name);
-			fprintf(fp, "电话号码:%d\n", temp->tel);
-			fprintf(fp, "学号:%d", temp->number);
-			fprintf(fp, "\n\n");
-		}
+
+	if (!fp) {
+		eprintf("file open failed!\n %s (OS %d)", strerror(errno), errno);
 	}
-	else
+	
+	if (p == NULL) 
 	{
 		puts("学生信息不存在,保存失败\n");
 		system("pause");
 	}
+
+ 	do {
+		fprintf(fp, "姓名: %s\n", temp->name);
+		fprintf(fp, "电话号码: %d\n", temp->tel);
+		fprintf(fp, "学号: %d\n", temp->number);
+		fprintf(fp, "\n");
+	} while(p = next_node(p));
+
 	system("pause");
 }
 
