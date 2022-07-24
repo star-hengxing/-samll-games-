@@ -1,24 +1,25 @@
-#include<stdio.h>
-#include<string.h>
-#include<stdlib.h>
-#include<Windows.h>
-#include<stdio.h>
-#include<conio.h>
-#include<time.h>
-#pragma warning(disable:4996)
+#include <stdio.h>
+#include <string.h>
+#include <stdlib.h>
+#include <Windows.h>
+#include <stdio.h>
+#include <conio.h>
+#include <time.h>
+#pragma warning(disable : 4996)
 
-typedef struct Student {
+typedef struct Student
+{
 	char name[20];
 	unsigned int tel;
 	int number;
-	struct student* next;
+	struct student *next;
 } student;
 
-student* create(int n)//创造链表
+student *create(int n) //创造链表
 {
 	int m = 1;
-	student* head = NULL, * temp = NULL, * end = NULL;
-	head = (student*)malloc(sizeof(student));
+	student *head = NULL, *temp = NULL, *end = NULL;
+	head = (student *)malloc(sizeof(student));
 	if (!head)
 	{
 		printf("头指针分配内存失败");
@@ -27,7 +28,7 @@ student* create(int n)//创造链表
 	end = head;
 	for (int i = 0; i < n; i++)
 	{
-		temp = (student*)malloc(sizeof(student));
+		temp = (student *)malloc(sizeof(student));
 		if (!temp)
 		{
 			printf("结点分配内存失败");
@@ -47,82 +48,70 @@ student* create(int n)//创造链表
 	return head;
 }
 
-void show(student* p)//显示所有数据
+student *next_node(student *p);
+student *nth_node(student *head, int n);
+
+void show(student *p) //显示所有数据
 {
 	int i = 1;
-	if (p != NULL)
+	while (p)
 	{
-		while (p->next != NULL)
-		{
-			p = p->next;
-			printf(" %d.名字:%s\n", i++, p->name);
-			printf("   学号:%d\n", p->number);
-			printf("   电话号码:%d\n", p->tel);
-			printf("\n");
-		}
-	}
-	else
-	{
-		puts("学生信息不存在\n");
-		system("pause");
+		printf(" %d.名字:%s\n", i++, p->name);
+		printf("   学号:%d\n", p->number);
+		printf("   电话号码:%d\n", p->tel);
+		printf("\n");
+		p = next_node(p);
 	}
 	system("pause");
 }
 
-void change(student* p, int n)//修改第n个结点
+void change(student *head, int n) //修改第n个结点
 {
-	int i = 0;
-	for (int i=0; i<n&&p; i++)
+	student *p = nth_node(head, n);
+
+	if (p == NULL)
 	{
-		p = p->next;
-	}
-	
-	if (p == NULL) {
 		puts("该学生信息不存在\n");
 	}
-	
+
 	printf("\t\t\n\n		  你想修改哪个数值:		 ");
 	printf("\n\n\t\t	      1.姓名       			");
 	printf("\n\n\t\t	      2.学号      			");
 	printf("\n\n\t\t	      3.电话号码      		 ");
 	printf("\n\n\t\t	      0.退出修改界面      		 \n");
-	
+
 	while (1)
 	{
-		switch (getch()) {
-			case '1':
-				printf("请输入新的名字:");
-				scanf("%s", &p->name);
-				puts("数据修改完毕\n");
-				break;
-			case '2':
-				printf("请输入新的学号:");
-				scanf("%d", &p->number);
-				puts("数据修改完毕\n");
-				break;
-			case '3':
-				printf("请输入新的电话号码:");
-				scanf("%d", &p->tel);
-				puts("数据修改完毕\n");
-				break;
-			default:
-				return;
+		switch (getch())
+		{
+		case '1':
+			printf("请输入新的名字:");
+			scanf("%s", &p->name);
+			puts("数据修改完毕\n");
+			break;
+		case '2':
+			printf("请输入新的学号:");
+			scanf("%d", &p->number);
+			puts("数据修改完毕\n");
+			break;
+		case '3':
+			printf("请输入新的电话号码:");
+			scanf("%d", &p->tel);
+			puts("数据修改完毕\n");
+			break;
+		default:
+			return;
 		}
 		Sleep(1000);
 	}
-
 }
 
-void delete(student* p, int n)//删除第n个结点
+void delete(student *p, int n) //删除第n个结点
 {
 	int i = 0;
-	student* temp;
-	while (i < n && p != NULL)
-	{
-		temp = p;
-		p = p->next;
-		i++;
-	}
+	student *temp;
+	p = nth_node(p, n);
+
 	if (p != NULL)
 	{
 		temp->next = p->next;
@@ -137,10 +126,10 @@ void delete(student* p, int n)//删除第n个结点
 	}
 }
 
-void add(student* p, int m, int n)//添加多少个结点,并且放在哪里
+void add(student *p, int m, int n) //添加多少个结点,并且放在哪里
 {
 	int i = 0;
-	student* temp;
+	student *temp;
 	while (i < n && p != NULL)
 	{
 		p = p->next;
@@ -150,7 +139,7 @@ void add(student* p, int m, int n)//添加多少个结点,并且放在哪里
 	{
 		for (int i = 0; i < m; i++)
 		{
-			temp = (student*)malloc(sizeof(student));
+			temp = (student *)malloc(sizeof(student));
 			printf("\n请输入名字:");
 			scanf("%s", &temp->name);
 			printf("\n请输入学号:");
@@ -168,19 +157,19 @@ void add(student* p, int m, int n)//添加多少个结点,并且放在哪里
 	}
 }
 
-void deletelist(student *p)//清空链表
+void deletelist(student *p) //清空链表
 {
-	student* temp1,*temp2 ;
-	temp1=p->next;
+	student *temp1, *temp2;
+	temp1 = p->next;
 	if (p != NULL)
-	while(temp1->next!=NULL)
-	{
-		temp2=temp1->next;
-		free(temp1);
-		temp1=temp2;
-	}
-	p->next=NULL;
-	p=NULL;
+		while (temp1->next != NULL)
+		{
+			temp2 = temp1->next;
+			free(temp1);
+			temp1 = temp2;
+		}
+	p->next = NULL;
+	p = NULL;
 	puts("删除数据成功!\n");
 	Sleep(1000);
 }
@@ -191,7 +180,8 @@ int decide()
 	while (1)
 	{
 		scanf("%ld", &n);
-		while (getchar() != '\n');
+		while (getchar() != '\n')
+			;
 		if (n >= 1 && n <= 50 && n != 0)
 		{
 			break;
@@ -204,16 +194,16 @@ int decide()
 void SaveData(student *p)
 {
 	student *temp;
-	FILE* fp = NULL;
-    fp = fopen("C:/Users/Administrator/Desktop/users.txt", "a");
+	FILE *fp = NULL;
+	fp = fopen("C:/Users/Administrator/Desktop/users.txt", "a");
 	if (p != NULL)
 	{
 		while (p->next != NULL)
 		{
 			p = p->next;
-			fprintf(fp,"姓名:%s\n",temp->name);
-			fprintf(fp,"电话号码:%d\n",temp->tel);
-			fprintf(fp,"学号:%d",temp->number);
+			fprintf(fp, "姓名:%s\n", temp->name);
+			fprintf(fp, "电话号码:%d\n", temp->tel);
+			fprintf(fp, "学号:%d", temp->number);
 			fprintf(fp, "\n\n");
 		}
 	}
@@ -227,7 +217,7 @@ void SaveData(student *p)
 
 int main()
 {
-	student* x = NULL;
+	student *x = NULL;
 	while (1)
 	{
 		printf("\n\n\t\t	= = =欢迎使用该系统= = =");
@@ -294,9 +284,8 @@ int main()
 			{
 				puts("你要删除第几名学生信息，请输入:");
 				m = decide();
-				delete(x, m);
+				delete (x, m);
 			}
-
 		}
 		else if (input == '5')
 		{
@@ -345,4 +334,30 @@ int main()
 		system("cls");
 	}
 	return 0;
+}
+
+student *next_node(student *p)
+{
+	if (p && p->next)
+	{
+		return p->next;
+	}
+	else
+	{
+		return NULL;
+	}
+}
+
+student *nth_node(student *head, int n)
+{
+	if (n <= 0)
+	{
+		return NULL;
+	}
+	student *p = head;
+
+	for (int i = 0; i < n && p; i++)
+	{
+		p = next_node(p);
+	}
 }
