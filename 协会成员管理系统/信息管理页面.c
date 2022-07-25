@@ -197,6 +197,7 @@ void SaveData(student *p)
 
 	if (!fp) {
 		eprintf("file open failed!\n %s (OS %d)", strerror(errno), errno);
+		return;
 	}
 	
 	if (p == NULL) 
