@@ -133,7 +133,7 @@ void add(student *p, int m, int n) //添加多少个结点,并且放在哪里
 {
 	int i = 0;
 	student *temp;
-	p = nth_node(p);
+	p = nth_node(p, n);
 	if (p != NULL)
 	{
 		for (int i = 0; i < m; i++)
@@ -159,8 +159,11 @@ void add(student *p, int m, int n) //添加多少个结点,并且放在哪里
 void deletelist(student *p) //清空链表
 {
 	
-	while(p = next_node(p)) {
+	p = next_node(p);
+	while(p) {
+		student *next = p->next;
 		free(p);
+		p = next;
 	}
 	
 	puts("删除数据成功!\n");
