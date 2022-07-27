@@ -57,13 +57,13 @@ student *nth_node(student *head, int n);
 void show(student *p) //显示所有数据
 {
 	int i = 1;
-	while (p)
+	
+	while (p = next_node(p))
 	{
 		printf(" %d.名字:%s\n", i++, p->name);
 		printf("   学号:%d\n", p->number);
 		printf("   电话号码:%d\n", p->tel);
 		printf("\n");
-		p = next_node(p);
 	}
 	system("pause");
 }
@@ -133,11 +133,7 @@ void add(student *p, int m, int n) //添加多少个结点,并且放在哪里
 {
 	int i = 0;
 	student *temp;
-	while (i < n && p != NULL)
-	{
-		p = p->next;
-		i++;
-	}
+	p = nth_node(p);
 	if (p != NULL)
 	{
 		for (int i = 0; i < m; i++)
@@ -162,11 +158,11 @@ void add(student *p, int m, int n) //添加多少个结点,并且放在哪里
 
 void deletelist(student *p) //清空链表
 {
-	while(p) {
-		student *next = next_node(p);
+	
+	while(p = next_node(p)) {
 		free(p);
-		p = next;
 	}
+	
 	puts("删除数据成功!\n");
 	Sleep(1000);
 }
@@ -190,12 +186,12 @@ int decide()
 
 void SaveData(student *p)
 {
-	student *temp;
 	FILE *fp = NULL;
 	fp = fopen("C:/Users/Administrator/Desktop/users.txt", "a");
 
 	if (!fp) {
 		eprintf("file open failed!\n %s (OS %d)", strerror(errno), errno);
+		return;
 	}
 	
 	if (p == NULL) 
@@ -204,12 +200,12 @@ void SaveData(student *p)
 		system("pause");
 	}
 
- 	do {
-		fprintf(fp, "姓名: %s\n", temp->name);
-		fprintf(fp, "电话号码: %d\n", temp->tel);
-		fprintf(fp, "学号: %d\n", temp->number);
+ 	while(p = next_node(p)) {
+		fprintf(fp, "姓名: %s\n", p->name);
+		fprintf(fp, "电话号码: %d\n", p->tel);
+		fprintf(fp, "学号: %d\n", p->number);
 		fprintf(fp, "\n");
-	} while(p = next_node(p));
+	};
 
 	system("pause");
 }
