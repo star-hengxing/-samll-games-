@@ -57,14 +57,13 @@ student *nth_node(student *head, int n);
 void show(student *p) //显示所有数据
 {
 	int i = 1;
-	p = next_node(p);
-	while (p)
+	
+	while (p = next_node(p))
 	{
 		printf(" %d.名字:%s\n", i++, p->name);
 		printf("   学号:%d\n", p->number);
 		printf("   电话号码:%d\n", p->tel);
 		printf("\n");
-		p = next_node(p);
 	}
 	system("pause");
 }
@@ -134,11 +133,7 @@ void add(student *p, int m, int n) //添加多少个结点,并且放在哪里
 {
 	int i = 0;
 	student *temp;
-	while (i < n && p != NULL)
-	{
-		p = p->next;
-		i++;
-	}
+	p = nth_node(p);
 	if (p != NULL)
 	{
 		for (int i = 0; i < m; i++)
@@ -163,12 +158,11 @@ void add(student *p, int m, int n) //添加多少个结点,并且放在哪里
 
 void deletelist(student *p) //清空链表
 {
-	p = next_node(p); // skip head
-	while(p) {
-		student *next = next_node(p);
+	
+	while(p = next_node(p)) {
 		free(p);
-		p = next;
 	}
+	
 	puts("删除数据成功!\n");
 	Sleep(1000);
 }
